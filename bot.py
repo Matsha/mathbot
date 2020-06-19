@@ -46,7 +46,7 @@ async def add(ctx, time=10.0):
     await ctx.send(f'**{inta}** + **{intb}**')
 
     def check(m):
-        return m.author == ctx.author
+        return m.author == ctx.author and ctx.channel == m.channel
 
     try:
         userAnswer = await client.wait_for('message',
