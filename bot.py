@@ -46,7 +46,8 @@ async def add(ctx, time=10.0):
     await ctx.send(f'**{inta}** + **{intb}**')
 
     def check(m):
-        return m.author == ctx.author and ctx.channel == m.channel
+        return m.content.isnumeric(
+        ) and ctx.channel == m.channel and m.author != client.user
 
     try:
         userAnswer = await client.wait_for('message',
@@ -57,14 +58,11 @@ async def add(ctx, time=10.0):
             '**You didnt enter an answer. The right answer is {}**'.format(
                 result))
     else:
-        if (userAnswer.content.isnumeric()):
-            if str(result) == userAnswer.content:
-                await ctx.send("**You got it right!**")
-            else:
-                await ctx.send(
-                    "**You are wrong! The right answer is {}**".format(result))
+        if str(result) == userAnswer.content:
+            await ctx.send("**You got it right!**")
         else:
-            await ctx.send("**Please enter a number.**")
+            await ctx.send(
+                "**You are wrong! The right answer is {}**".format(result))
 
 
 #stuff
