@@ -1,5 +1,8 @@
 import os
 import discord
+import random
+import time
+import asyncio
 from dotenv import load_dotenv
 from discord.ext import commands
 
@@ -29,6 +32,14 @@ async def ping(ctx):
 @client.command()
 async def clear(ctx, amount = 5):
     await ctx.channel.purge(limit=amount+1)
+
+@client.command()
+async def add(ctx):
+    inta = random.choice(range(1,100))
+    intb = random.choice(range(1,100))
+    await ctx.send(f'{inta}+{intb}')
+    time.sleep(10)
+    await ctx.send(f'The answer is {inta+intb}')
 
 #stuff
 client.activity = discord.Game(name=".ping") 
