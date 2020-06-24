@@ -166,30 +166,69 @@ async def multiply(ctx, time=30):
                 "**You are wrong! The right answer is {}**".format(result))
     multiply.reset_cooldown(ctx)
 
+#divide
+@client.command()
+@commands.cooldown(1, 100, commands.BucketType.channel)
+async def divide(ctx, time=30):
+    inta = random.choice(range(1,20))
+    result =random.choice(range(1,20))
+    intb = inta * result
+    await ctx.send(f'**{intb}**:**{inta}**')
+    if(time>60):
+        await ctx.send("The maximum time allowed is 60 seconds.")
+        time = 60
+    if(time<0):
+        await ctx.send("Please enter a positive value")
+        time = 15
+
+    def check(m):
+        return m.content.isnumeric(
+        ) and ctx.channel == m.channel and m.author != client.user
+
+    try:
+        userAnswer = await client.wait_for('message',
+                                           timeout=int(time),
+                                           check=check)
+    except asyncio.TimeoutError:
+        await ctx.send(
+            '**You didnt enter an answer. The right answer is {}**'.format(
+                result))
+    else:
+        if str(result) == userAnswer.content:
+            await ctx.send("**You got it right!**")
+        else:
+            await ctx.send(
+                "**You are wrong! The right answer is {}**".format(result))
+    divide.reset_cooldown(ctx)
+    
+
  
 @client.command()
-async def owo(ctx, *, str):
-    str = str.lower()
-    #delete these
-    owostr = str.replace("o","owo")
-    owostr = owostr.replace("u","uwu")
-    #word replacements
-    owostr = owostr.replace("you","chu")
-    owostr = owostr.replace("ove","uv")
-    owostr = owostr.replace("no","nu")
-    #letter replacements
-    owostr = owostr.replace("r","w")
-    owostr = owostr.replace("l","w")
-    owostr = owostr.replace("th","ff")
-    #append
-    owoappend = ["òwó","owo","UwU","uwu","d-daddy","qwq"]
-    owoemotes = ["(≧∀≦)","(⋟﹏⋞)","(＾▽＾)","<3","（*＾3＾）"]
-    #stutter
-    s = owostr[0]
-    owostr = owostr.replace(s, (s+"-"+s),1)
-    #final
-    owostr= random.choice(owoappend)+" "+owostr+" "+random.choice(owoemotes)+" ~"
-    await ctx.send(owostr)
+async def owo(ctx, *, str=""):
+    if (str!=""):
+        str = str.lower()
+        #delete these
+        owostr = str.replace("o","owo")
+        owostr = owostr.replace("u","uwu")
+        #word replacements
+        owostr = owostr.replace("you","chu")
+        owostr = owostr.replace("ove","uv")
+        owostr = owostr.replace("no","nu")
+        #letter replacements
+        owostr = owostr.replace("r","w")
+        owostr = owostr.replace("l","w")
+        owostr = owostr.replace("th","ff")
+        #append
+        owoappend = ["òwó","owo","UwU","uwu","d-daddy","qwq"]
+        owoemotes = ["(≧∀≦)","(⋟﹏⋞)","(＾▽＾)","<3","（*＾3＾）"]
+        #stutter
+        s = owostr[0]
+        owostr = owostr.replace(s, (s+"-"+s),1)
+        #final
+        owostr= random.choice(owoappend)+" "+owostr+" "+random.choice(owoemotes)+" ~"
+        await ctx.send(owostr)
+    else:
+        await ctx.send("pwease entew a sentence owo (⋟﹏⋞)~")
 
 #stuff
 client.activity = discord.Game(name="with someone's patience")
