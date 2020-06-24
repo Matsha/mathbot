@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord.ext.commands import cooldown
 
-
 #initialization with hidden token
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -31,7 +30,7 @@ async def on_member_remove(member):
 
 
 @client.event
-async def on_command_error(ctx,error):
+async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.send("**Command is on cooldown**")
     else:
@@ -41,7 +40,10 @@ async def on_command_error(ctx,error):
 #commands
 @client.command()
 async def dab(ctx):
-    dablist = ["<:dabsans:724932370956025906>","<:dabroblox:724932349669802104>","<:dabpepe:724932328811528203>","<:dab:724932300462358588>"]
+    dablist = [
+        "<:dabsans:724932370956025906>", "<:dabroblox:724932349669802104>",
+        "<:dabpepe:724932328811528203>", "<:dab:724932300462358588>"
+    ]
     await ctx.send(random.choice(dablist))
 
 
@@ -68,10 +70,10 @@ async def add(ctx, time=15):
     intb = random.choice(range(1, 100))
     result = int(inta) + int(intb)
     await ctx.send(f'**{inta}** + **{intb}**')
-    if(time>60):
+    if (time > 60):
         await ctx.send("The maximum time allowed is 60 seconds.")
         time = 60
-    if(time<0):
+    if (time < 0):
         await ctx.send("Please enter a positive value")
         time = 15
 
@@ -97,39 +99,48 @@ async def add(ctx, time=15):
 
 
 #subtract
-@client.command(aliases=["subtract","subtraction"])
+@client.command(aliases=["subtract", "subtraction"])
 @commands.cooldown(1, 100, commands.BucketType.channel)
 async def sub(ctx, time=15):
     inta = random.choice(range(1, 100))
     intb = random.choice(range(1, 100))
     result = int(inta) - int(intb)
     await ctx.send(f'**{inta}** - **{intb}**')
-    if(time>60):
+    if (time > 60):
         await ctx.send("The maximum time allowed is 60 seconds.")
         time = 60
-    if(time<0):
+    if (time < 0):
         await ctx.send("Please enter a positive value")
         time = 15
 
-    def check(m):
+    def checkpositive(m):
+        print(f"lol {result}")
         return m.content.isnumeric(
         ) and ctx.channel == m.channel and m.author != client.user
 
+    def checknegative(m):
+        print(f"lmao {result}")
+        return ctx.channel == m.channel and m.author != client.user and m.content.startswith(
+            '-')
+
     try:
-        userAnswer = await client.wait_for('message',
-                                           timeout=int(time),
-                                           check=check)
+        userAnswer = await client.wait_for(
+            'message',
+            timeout=int(time),
+            check=checkpositive if result >= 0 else checknegative)
     except asyncio.TimeoutError:
         await ctx.send(
             '**You didnt enter an answer. The right answer is {}**'.format(
                 result))
     else:
+        print(userAnswer.content)
         if str(result) == userAnswer.content:
             await ctx.send("**You got it right!**")
         else:
             await ctx.send(
                 "**You are wrong! The right answer is {}**".format(result))
     sub.reset_cooldown(ctx)
+
 
 #multiply
 @client.command()
@@ -139,10 +150,10 @@ async def multiply(ctx, time=30):
     intb = random.choice(range(1, 20))
     result = int(inta) * int(intb)
     await ctx.send(f'**{inta}** x **{intb}**')
-    if(time>60):
+    if (time > 60):
         await ctx.send("The maximum time allowed is 60 seconds.")
         time = 60
-    if(time<0):
+    if (time < 0):
         await ctx.send("Please enter a positive value")
         time = 15
 
@@ -166,18 +177,19 @@ async def multiply(ctx, time=30):
                 "**You are wrong! The right answer is {}**".format(result))
     multiply.reset_cooldown(ctx)
 
+
 #divide
 @client.command()
 @commands.cooldown(1, 100, commands.BucketType.channel)
 async def divide(ctx, time=30):
-    inta = random.choice(range(1,20))
-    result =random.choice(range(1,20))
+    inta = random.choice(range(1, 20))
+    result = random.choice(range(1, 20))
     intb = inta * result
     await ctx.send(f'**{intb}**:**{inta}**')
-    if(time>60):
+    if (time > 60):
         await ctx.send("The maximum time allowed is 60 seconds.")
         time = 60
-    if(time<0):
+    if (time < 0):
         await ctx.send("Please enter a positive value")
         time = 15
 
@@ -200,35 +212,36 @@ async def divide(ctx, time=30):
             await ctx.send(
                 "**You are wrong! The right answer is {}**".format(result))
     divide.reset_cooldown(ctx)
-    
 
- 
+
 @client.command()
 async def owo(ctx, *, str=""):
-    if (str!=""):
+    if (str != ""):
         str = str.lower()
         #delete these
-        owostr = str.replace("o","owo")
-        owostr = owostr.replace("u","uwu")
+        owostr = str.replace("o", "owo")
+        owostr = owostr.replace("u", "uwu")
         #word replacements
-        owostr = owostr.replace("you","chu")
-        owostr = owostr.replace("ove","uv")
-        owostr = owostr.replace("no","nu")
+        owostr = owostr.replace("you", "chu")
+        owostr = owostr.replace("ove", "uv")
+        owostr = owostr.replace("no", "nu")
         #letter replacements
-        owostr = owostr.replace("r","w")
-        owostr = owostr.replace("l","w")
-        owostr = owostr.replace("th","ff")
+        owostr = owostr.replace("r", "w")
+        owostr = owostr.replace("l", "w")
+        owostr = owostr.replace("th", "ff")
         #append
-        owoappend = ["òwó","owo","UwU","uwu","d-daddy","qwq"]
-        owoemotes = ["(≧∀≦)","(⋟﹏⋞)","(＾▽＾)","<3","（*＾3＾）"]
+        owoappend = ["òwó", "owo", "UwU", "uwu", "d-daddy", "qwq"]
+        owoemotes = ["(≧∀≦)", "(⋟﹏⋞)", "(＾▽＾)", "<3", "（*＾3＾）"]
         #stutter
         s = owostr[0]
-        owostr = owostr.replace(s, (s+"-"+s),1)
+        owostr = owostr.replace(s, (s + "-" + s), 1)
         #final
-        owostr= random.choice(owoappend)+" "+owostr+" "+random.choice(owoemotes)+" ~"
+        owostr = random.choice(owoappend) + " " + owostr + " " + random.choice(
+            owoemotes) + " ~"
         await ctx.send(owostr)
     else:
         await ctx.send("pwease entew a sentence owo (⋟﹏⋞)~")
+
 
 #stuff
 client.activity = discord.Game(name="with someone's patience")
